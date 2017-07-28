@@ -48,19 +48,19 @@ public class Editor extends Application {
         String s = "";
         Node curr = buffer.sentinel;
         while(curr.next != null){
-            s = s + curr.next.c;
+            s = s + curr.next.nodeText.getText();
             curr = curr.next;
         }
         return s;
     }
 
     private class Node {
-        public Character c;
+        public Text nodeText;
         public Node next;
         public Node prev;
 
-        public Node(Character c, Node next, Node prev){
-            this.c = c;
+        public Node(Text c, Node next, Node prev){
+            nodeText = c;
             this.next = next;
             this.prev = prev;
         }
@@ -75,14 +75,14 @@ public class Editor extends Application {
 
 
         public FastLinkedList(){
-            sentinel = new Node(' ',null, null);
+            sentinel = new Node(new Text(),null, null);
             currentPos = 0;
             currentNode = sentinel;
         }
 
         public void addChar(char x){
             currentPos++;
-            currentNode.next =  new Node(x, null, currentNode);
+            currentNode.next =  new Node(new Text(Character.toString(x)), null, currentNode);
             currentNode = currentNode.next;
 
         }
@@ -146,7 +146,7 @@ public class Editor extends Application {
                     // key, which is represented as a character of value = 8 on Windows.
                     //displayText.setText(characterTyped);
                     buffer.addChar(characterTyped.charAt(0));
-                    displayText.setText(bufferString());
+                    renderText(buffer);
                     keyEvent.consume();
                 }
 
@@ -166,7 +166,7 @@ public class Editor extends Application {
                     centerText();
                 } else if (code == KeyCode.BACK_SPACE) {
                     buffer.deleteChar();
-                    displayText.setText(bufferString());
+                    renderText(buffer);
                     centerText();
                 }
             }
@@ -181,7 +181,7 @@ public class Editor extends Application {
 //            double textTop = textCenterY - textHeight / 2;
 //            double textLeft = textCenterX - textWidth / 2;
 
-
+            displayText.setText(bufferString());
             // Re-position the text.
             displayText.setX(0);
             displayText.setY(0);
@@ -191,6 +191,9 @@ public class Editor extends Application {
         }
     }
 
+    private void renderText(FastLinkedList buffer){
+
+    }
 
     /** An EventHandler to handle changing the color of the rectangle. */
     private class RectangleBlinkEventHandler implements EventHandler<ActionEvent> {
@@ -248,7 +251,7 @@ public class Editor extends Application {
         scene.setOnKeyPressed(keyEventHandler);
         root.getChildren().add(cursor);
         makeRectangleColorChange();
-        primaryStage.setTitle("Single Letter Display");
+        primaryStage.setTitle("Simple Editor");
 
         // This is boilerplate, necessary to setup the window where things are displayed.
         primaryStage.setScene(scene);
